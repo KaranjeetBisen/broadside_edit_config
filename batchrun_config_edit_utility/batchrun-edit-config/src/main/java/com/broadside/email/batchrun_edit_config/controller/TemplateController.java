@@ -10,27 +10,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.broadside.email.batchrun_edit_config.model.ConfigUpdateRequest;
-import com.broadside.email.batchrun_edit_config.model.ConfigView;
-import com.broadside.email.batchrun_edit_config.service.ConfigService;
+import com.broadside.email.batchrun_edit_config.model.TemplateUpdateRequest;
+import com.broadside.email.batchrun_edit_config.model.TemplateView;
 import com.broadside.email.batchrun_edit_config.service.JobQService;
+import com.broadside.email.batchrun_edit_config.service.TemplateService;
 
 @RestController
 @RequestMapping("/campaign")
-public class ConfigController {
+public class TemplateController {
 
     @Autowired
-    private ConfigService configService;
+    private TemplateService templateService;
 
     @Autowired
     private JobQService jobQService;
 
-    @GetMapping("/{campId}/config")
-    public ResponseEntity<?> getConfig(@PathVariable String campId) {
-        int jobId = jobQService.start("CONFIG", "GET", campId);
+    @GetMapping("/{campId}/template")
+    public ResponseEntity<?> getTemplate(@PathVariable String campId) {
+        int jobId = jobQService.start("TEMPLATE", "GET", campId);
 
         try {
-            ConfigView view = configService.getConfig(campId);
+            TemplateView view = templateService.getTemplate(campId);
             jobQService.end(jobId, view, "SUCCESS");
             return ResponseEntity.ok(view);
         } catch (Exception e) {
@@ -40,15 +40,15 @@ public class ConfigController {
         }
     }
 
-    @PutMapping("/{campId}/config")
-    public ResponseEntity<?> updateConfig(
+    @PutMapping("/{campId}/template")
+    public ResponseEntity<?> updateTemplate(
             @PathVariable String campId,
-            @RequestBody ConfigUpdateRequest request) {
+            @RequestBody TemplateUpdateRequest request) {
 
-        int jobId = jobQService.start("CONFIG", "UPDATE", request);
+        int jobId = jobQService.start("TEMPLATE", "UPDATE", request);
 
         try {
-            ConfigView updated = configService.updateConfig(campId, request);
+            TemplateView updated = templateService.updateTemplate(campId, request);
             jobQService.end(jobId, updated, "SUCCESS");
             return ResponseEntity.ok(updated);
         } catch (Exception e) {
@@ -57,5 +57,4 @@ public class ConfigController {
                     .body("Error: " + e.getMessage());
         }
     }
-
 }
