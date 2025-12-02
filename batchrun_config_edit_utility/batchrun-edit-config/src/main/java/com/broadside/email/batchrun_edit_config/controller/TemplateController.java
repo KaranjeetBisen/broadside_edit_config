@@ -153,6 +153,7 @@ public class TemplateController {
         int jobId = jobQService.start("TEMPLATE", "DOWNLOAD", campId);
 
         try {
+
             Path templateFile = templateService.getTemplateFilePath(campId);
 
             if (!Files.exists(templateFile)) {
@@ -163,8 +164,11 @@ public class TemplateController {
             byte[] fileContent = Files.readAllBytes(templateFile);
             ByteArrayResource resource = new ByteArrayResource(fileContent);
 
+            // Use the actual filename from the template file
+            String actualFileName = templateFile.getFileName().toString();
+
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + campId + ".html\"");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + actualFileName + "\"");
             headers.add(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE);
             headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(fileContent.length));
 
