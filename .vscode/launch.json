@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-BatchrunEditConfigApplication<batchrun-edit-config>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.broadside.email.batchrun_edit_config.BatchrunEditConfigApplication",
+            "projectName": "batchrun-edit-config",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
