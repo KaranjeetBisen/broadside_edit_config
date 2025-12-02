@@ -235,4 +235,23 @@ public class TemplateService {
             return false;
         }
     }
+
+    /**
+     * Gets the template file path (for file operations)
+     */
+    public Path getTemplateFilePath(String campId) {
+        validateCampId(campId);
+        return resolveTemplateFile(campId);
+    }
+
+    /**
+     * Updates template from file content
+     */
+    public TemplateView updateTemplateFromFile(String campId, String htmlContent, boolean createBackup)
+            throws IOException {
+        TemplateUpdateRequest request = new TemplateUpdateRequest();
+        request.setHtmlContent(htmlContent);
+        request.setCreateBackup(createBackup);
+        return updateTemplate(campId, request);
+    }
 }
