@@ -41,8 +41,51 @@ public class TemplateService {
         return Paths.get(templBasePath, campId);
     }
 
-    private Path resolveBackupFile(String campId, String timestamp) {
-        return Paths.get(templBasePath, campId, "backups", campId + "_" + timestamp + ".html");
+    /**
+     * Finds existing HTML file in the template directory
+     * Returns the path of the first .html file found, or null if none exists
+     */
+    private Path findExistingHtmlFile(String campId) throws IOException {
+        Path templateDir = resolveTemplateDirectory(campId);
+
+        if (!Files.exists(templateDir)) {
+            return null;
+        }
+
+        // Search for any .html file in the directory
+        try (var stream = Files.list(templateDir)) {
+            return stream
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.toString().toLowerCase().endsWith(".html"))
+                    .findFirst()
+                    .orElse(null);
+        }
+    }
+
+    /**
+     * Creates a backup of existing HTML file with its original name
+     */
+    private String createBackupWithOriginalName(String campId, Path existingFile) throws IOException {
+        if (!Files.exists(existingFile)) {
+            return ""; // No existing file to backup
+        }
+
+        String timestamp = LocalDateTime.now().format(BACKUP_TIMESTAMP_FORMAT);
+        String originalFileName = existingFile.getFileName().toString();
+        String fileNameWithoutExt = originalFileName.substring(0, originalFileName.lastIndexOf(".html"));
+
+        Path backupDir = resolveTemplateDirectory(campId).resolve("backups");
+        Path backupFile = backupDir.resolve(fileNameWithoutExt + "_" + timestamp + ".html");
+
+        // Create backup directory if it doesn't exist
+        Files.createDirectories(backupDir);
+
+        // Copy existing file to backup with timestamp
+        Files.copy(existingFile, backupFile, StandardCopyOption.REPLACE_EXISTING);
+
+        logger.info("Created backup for campaign {} from {} to {}", campId, existingFile.getFileName(),
+                backupFile.getFileName());
+        return backupFile.toString();
     }
 
     /**
@@ -109,32 +152,13 @@ public class TemplateService {
         }
     }
 
-    /**
-     * Creates a backup of existing template
-     */
-    private String createBackup(String campId, Path templateFile) throws IOException {
-        if (!Files.exists(templateFile)) {
-            return ""; // No existing file to backup
-        }
-
-        String timestamp = LocalDateTime.now().format(BACKUP_TIMESTAMP_FORMAT);
-        Path backupDir = resolveTemplateDirectory(campId).resolve("backups");
-        Path backupFile = resolveBackupFile(campId, timestamp);
-
-        // Create backup directory if it doesn't exist
-        Files.createDirectories(backupDir);
-
-        // Copy existing file to backup
-        Files.copy(templateFile, backupFile, StandardCopyOption.REPLACE_EXISTING);
-
-        logger.info("Created backup for campaign {} at {}", campId, backupFile);
-        return backupFile.toString();
-    }
-
     public TemplateView getTemplate(String campId) throws IOException {
         validateCampId(campId);
 
-        Path templateFile = resolveTemplateFile(campId);
+        // First, try to find any existing HTML file in the directory
+        Path existingHtmlFile = findExistingHtmlFile(campId);
+        Path templateFile = existingHtmlFile != null ? existingHtmlFile : resolveTemplateFile(campId);
+
         TemplateView view = new TemplateView();
         view.setCampId(campId);
         view.setFilePath(templateFile.toString());
@@ -180,7 +204,6 @@ public class TemplateService {
         validateHtmlContent(request.getHtmlContent());
 
         Path templateDir = resolveTemplateDirectory(campId);
-        Path templateFile = resolveTemplateFile(campId);
 
         // Create directory if it doesn't exist
         if (!Files.exists(templateDir)) {
@@ -188,11 +211,26 @@ public class TemplateService {
             logger.info("Created template directory for campaign: {}", campId);
         }
 
-        // Create backup if requested and file exists
+        // Find existing HTML file in the directory
+        Path existingHtmlFile = findExistingHtmlFile(campId);
+        Path targetFile;
+
+        if (existingHtmlFile != null) {
+            // Use the existing file's name and location
+            targetFile = existingHtmlFile;
+            logger.info("Found existing HTML file for campaign {}: {}", campId, existingHtmlFile.getFileName());
+        } else {
+            // No existing file, use default naming convention
+            targetFile = resolveTemplateFile(campId);
+            logger.info("No existing HTML file found for campaign {}, using default: {}", campId,
+                    targetFile.getFileName());
+        }
+
+        // Create backup if requested and existing file exists
         String backupPath = "";
-        if (request.isCreateBackup() && Files.exists(templateFile)) {
+        if (request.isCreateBackup() && existingHtmlFile != null) {
             try {
-                backupPath = createBackup(campId, templateFile);
+                backupPath = createBackupWithOriginalName(campId, existingHtmlFile);
             } catch (IOException e) {
                 logger.error("Failed to create backup for campaign {}: {}", campId, e.getMessage());
                 throw new IOException("Failed to create backup: " + e.getMessage());
@@ -200,11 +238,12 @@ public class TemplateService {
         }
 
         try {
-            // Write the HTML content to the file (this will override existing file)
-            Files.writeString(templateFile, request.getHtmlContent(), StandardCharsets.UTF_8);
-            logger.info("Successfully updated template for campaign: {}", campId);
+            // Write the new HTML content to the target file (this will override existing
+            // file)
+            Files.writeString(targetFile, request.getHtmlContent(), StandardCharsets.UTF_8);
+            logger.info("Successfully updated template for campaign {} at: {}", campId, targetFile.getFileName());
 
-            // Return the updated template view
+            // Return the updated template view (note: this will read from the updated file)
             TemplateView result = getTemplate(campId);
 
             // Add metadata from request
@@ -238,9 +277,18 @@ public class TemplateService {
 
     /**
      * Gets the template file path (for file operations)
+     * Returns existing HTML file if found, otherwise returns default path
      */
-    public Path getTemplateFilePath(String campId) {
+    public Path getTemplateFilePath(String campId) throws IOException {
         validateCampId(campId);
+
+        // Try to find existing HTML file first
+        Path existingFile = findExistingHtmlFile(campId);
+        if (existingFile != null) {
+            return existingFile;
+        }
+
+        // Return default path if no existing file
         return resolveTemplateFile(campId);
     }
 
