@@ -1,0 +1,5 @@
+/* App component wrapper */
+:host {
+  display: block;
+  min-height: 100vh;
+}

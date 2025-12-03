@@ -1,0 +1,180 @@
+<div class="template-container">
+  <div class="page-header">
+    <button class="btn btn-outline" (click)="goBack()">← Back</button>
+    <h1>Template Configuration</h1>
+    <p>Upload, preview, and manage HTML email templates</p>
+  </div>
+
+  <!-- Alert Messages -->
+  <div class="alerts">
+    <div *ngIf="successMessage" class="alert alert-success">
+      <span>✓</span> {{ successMessage }}
+    </div>
+    <div *ngIf="error" class="alert alert-error">
+      <span>✕</span> {{ error }}
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Campaign ID Input -->
+    <div class="campaign-input-section">
+      <div class="input-group">
+        <label>Campaign ID</label>
+        <div class="input-wrapper">
+          <input 
+            type="text" 
+            [(ngModel)]="campaignId"
+            placeholder="e.g., summer2024, ABC123"
+            (keyup.enter)="loadTemplate()"
+          />
+          <button class="btn btn-primary" (click)="loadTemplate()" [disabled]="loading">
+            🔍 Load
+          </button>
+        </div>
+        <p class="hint">Enter a campaign ID to load its template</p>
+      </div>
+    </div>
+
+    <div *ngIf="selectedTemplate" class="template-content">
+      <!-- Template Header -->
+      <div class="template-header">
+        <div class="template-info">
+          <h2>{{ selectedTemplate.filePath.split('/').pop() }}</h2>
+          <div class="meta-info">
+            <span class="meta-item">
+              <strong>File Size:</strong> {{ (selectedTemplate.fileSize / 1024).toFixed(2) }} KB
+            </span>
+            <span class="meta-item">
+              <strong>Backup Status:</strong> 
+              <span *ngIf="selectedTemplate.hasBackup" class="badge badge-success">✓ Has Backup</span>
+              <span *ngIf="!selectedTemplate.hasBackup" class="badge badge-warning">No Backup</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button 
+            *ngIf="!editMode"
+            class="btn btn-primary btn-sm" 
+            (click)="startEdit()"
+          >
+            ✏️ Edit
+          </button>
+          <button 
+            *ngIf="editMode"
+            class="btn btn-primary btn-sm" 
+            (click)="saveEdit()"
+            [disabled]="loading"
+          >
+            💾 Save
+          </button>
+          <button 
+            *ngIf="editMode"
+            class="btn btn-secondary btn-sm" 
+            (click)="cancelEdit()"
+          >
+            Cancel
+          </button>
+          <button 
+            class="btn btn-secondary btn-sm" 
+            (click)="downloadTemplate()"
+          >
+            📥 Download
+          </button>
+          <button 
+            class="btn btn-secondary btn-sm"
+            (click)="togglePreview()"
+          >
+            {{ previewMode ? '👁️ Hide Preview' : '👁️ Preview' }}
+          </button>
+          <button 
+            class="btn btn-outline btn-sm"
+            style="color: var(--danger-color); border-color: var(--danger-color);"
+            (click)="deleteTemplate()"
+          >
+            🗑️ Delete
+          </button>
+        </div>
+      </div>
+
+      <div class="template-view">
+        <!-- Edit Mode -->
+        <div *ngIf="editMode" class="editor-panel">
+          <label>HTML Content</label>
+          <textarea 
+            [(ngModel)]="editedContent"
+            placeholder="Paste or edit your HTML template here..."
+          ></textarea>
+        </div>
+
+        <!-- Preview Mode -->
+        <div *ngIf="previewMode && !editMode" class="preview-panel">
+          <h3>Live Preview</h3>
+          <iframe 
+            [srcdoc]="selectedTemplate.htmlContent"
+            class="preview-frame"
+          ></iframe>
+        </div>
+
+        <!-- Content Display -->
+        <div *ngIf="!editMode && !previewMode" class="content-panel">
+          <div class="code-container">
+            <pre>{{ selectedTemplate.htmlContent }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Template Section -->
+    <div *ngIf="campaignId && !selectedTemplate" class="upload-section">
+      <div class="upload-box">
+        <div class="upload-icon">📄</div>
+        <h2>Upload New Template</h2>
+        <p>No template found for this campaign. Upload one now:</p>
+        
+        <div class="file-input-wrapper">
+          <input 
+            type="file" 
+            #fileInput
+            accept=".html"
+            (change)="onFileSelected($event)"
+            class="file-input"
+          />
+          <button 
+            class="btn btn-secondary"
+            (click)="fileInput.click()"
+          >
+            Choose File
+          </button>
+        </div>
+
+        <div *ngIf="selectedFile" class="selected-file">
+          <p><strong>Selected:</strong> {{ selectedFile.name }}</p>
+        </div>
+
+        <div class="backup-option">
+          <label>
+            <input type="checkbox" [(ngModel)]="createBackup" />
+            Create backup before upload
+          </label>
+        </div>
+
+        <button 
+          class="btn btn-primary"
+          (click)="uploadTemplate()"
+          [disabled]="!selectedFile || loading"
+        >
+          {{ loading ? 'Uploading...' : '📤 Upload Template' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!selectedTemplate && !campaignId" class="empty-state">
+      <div class="empty-icon">📋</div>
+      <h2>Load a Template</h2>
+      <p>Enter a campaign ID above to get started</p>
+    </div>
+  </div>
+</div>

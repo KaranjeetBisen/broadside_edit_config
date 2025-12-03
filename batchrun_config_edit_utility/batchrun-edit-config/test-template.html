@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Campaign Template</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { background-color: #f0f0f0; padding: 20px; }
+        .content { padding: 20px; }
+        .footer { background-color: #e0e0e0; padding: 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome to Our Campaign!</h1>
+    </div>
+    
+    <div class="content">
+        <h2>Hello {{customerName}}!</h2>
+        <p>Thank you for joining our <strong>{{campaignType}}</strong> campaign.</p>
+        
+        <p>Here are your personalized details:</p>
+        <ul>
+            <li>Customer ID: {{customerId}}</li>
+            <li>Email: {{customerEmail}}</li>
+            <li>Campaign Start: {{startDate}}</li>
+        </ul>
+        
+        <p>We hope you enjoy this experience!</p>
+        
+        <a href="{{unsubscribeLink}}" style="color: #666;">Unsubscribe</a>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2025 Broadside Email Campaign System. All rights reserved.</p>
+        <p>Campaign ID: {{campaignId}} | Template Version: 1.0</p>
+    </div>
+</body>
+</html>

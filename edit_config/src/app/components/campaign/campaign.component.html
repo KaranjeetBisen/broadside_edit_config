@@ -1,0 +1,127 @@
+<div class="campaign-container">
+  <div class="page-header">
+    <button class="btn btn-outline" (click)="goBack()">← Back</button>
+    <h1>Campaign Configuration</h1>
+    <p>Manage and edit your campaign configurations</p>
+  </div>
+
+  <!-- Alert Messages -->
+  <div class="alerts">
+    <div *ngIf="successMessage" class="alert alert-success">
+      <span>✓</span> {{ successMessage }}
+    </div>
+    <div *ngIf="error" class="alert alert-error">
+      <span>✕</span> {{ error }}
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="content-layout">
+      <!-- Configs List -->
+      <div class="configs-panel">
+        <h2>Available Campaigns</h2>
+        
+        <div *ngIf="loading" class="loading">
+          <div class="spinner"></div>
+          <p>Loading configurations...</p>
+        </div>
+
+        <div *ngIf="!loading" class="configs-list">
+          <div *ngIf="configs.length === 0" class="empty-state">
+            <p>No campaigns found</p>
+          </div>
+
+          <div 
+            *ngFor="let config of configs" 
+            class="config-item"
+            [class.active]="selectedConfig?.campId === config.campId"
+            (click)="viewConfig(config)"
+          >
+            <div class="config-header">
+              <h3>{{ config.campId }}</h3>
+              <span class="config-badge">{{ config.configName }}</span>
+            </div>
+            <p class="text-muted">{{ config.description || 'No description' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Config Details -->
+      <div class="details-panel">
+        <div *ngIf="!selectedConfig" class="empty-state">
+          <h2>Select a Campaign</h2>
+          <p>Choose a campaign from the list to view and edit its configuration</p>
+        </div>
+
+        <div *ngIf="selectedConfig" class="config-details">
+          <div class="details-header">
+            <h2>{{ selectedConfig.campId }}</h2>
+            <div class="action-buttons">
+              <button 
+                *ngIf="!editMode"
+                class="btn btn-primary btn-sm" 
+                (click)="startEdit()"
+              >
+                ✏️ Edit
+              </button>
+              <button 
+                *ngIf="editMode"
+                class="btn btn-primary btn-sm" 
+                (click)="saveConfig()"
+                [disabled]="loading"
+              >
+                💾 Save
+              </button>
+              <button 
+                *ngIf="editMode"
+                class="btn btn-secondary btn-sm" 
+                (click)="cancelEdit()"
+              >
+                Cancel
+              </button>
+              <button 
+                *ngIf="!editMode"
+                class="btn btn-outline btn-sm"
+                style="color: var(--danger-color); border-color: var(--danger-color);"
+                (click)="deleteConfig(selectedConfig.campId)"
+              >
+                🗑️ Delete
+              </button>
+            </div>
+          </div>
+
+          <!-- Preview Mode -->
+          <div *ngIf="!editMode" class="config-content">
+            <div class="info-block">
+              <label>Campaign ID</label>
+              <p>{{ selectedConfig.campId }}</p>
+            </div>
+            <div class="info-block">
+              <label>Config Name</label>
+              <p>{{ selectedConfig.configName }}</p>
+            </div>
+            <div class="info-block">
+              <label>Configuration Settings</label>
+              <pre>{{ selectedConfig.configSettings | json }}</pre>
+            </div>
+            <div *ngIf="selectedConfig.description" class="info-block">
+              <label>Description</label>
+              <p>{{ selectedConfig.description }}</p>
+            </div>
+          </div>
+
+          <!-- Edit Mode -->
+          <div *ngIf="editMode" class="config-form">
+            <div class="form-group">
+              <label>Configuration Settings (JSON)</label>
+              <textarea 
+                [(ngModel)]="editedConfig"
+              ></textarea>
+              <p class="hint">Edit the JSON configuration directly</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

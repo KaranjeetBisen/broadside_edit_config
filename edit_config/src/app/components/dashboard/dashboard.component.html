@@ -1,0 +1,75 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1>Broadside Config Manager</h1>
+      <p>Manage your campaign configuration and templates</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="dashboard-grid">
+      <!-- Campaign Configuration Card -->
+      <div class="feature-card" (click)="navigateTo('campaign')">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="9" x2="15" y2="9"></line>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+          </svg>
+        </div>
+        <h2>Campaign Configuration</h2>
+        <p>View and edit campaign settings and configurations</p>
+        <div class="card-features">
+          <span class="feature-badge">📋 View</span>
+          <span class="feature-badge">✏️ Edit</span>
+        </div>
+        <button class="btn btn-primary mt-lg">Open Config</button>
+      </div>
+
+      <!-- Template Configuration Card -->
+      <div class="feature-card" (click)="navigateTo('template')">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+          </svg>
+        </div>
+        <h2>Template Configuration</h2>
+        <p>Upload, preview, and manage HTML email templates</p>
+        <div class="card-features">
+          <span class="feature-badge">👁️ Preview</span>
+          <span class="feature-badge">📤 Upload</span>
+        </div>
+        <button class="btn btn-primary mt-lg">Open Template</button>
+      </div>
+    </div>
+
+    <!-- Quick Info Section -->
+    <div class="info-section mt-3xl">
+      <h3>Features</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-icon">⚙️</div>
+          <h4>Smart Configuration</h4>
+          <p>Easily manage campaign settings and parameters</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🎨</div>
+          <h4>Template Management</h4>
+          <p>Upload HTML templates with automatic backup</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">👁️</div>
+          <h4>Live Preview</h4>
+          <p>See your templates before saving</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">💾</div>
+          <h4>Smart Backups</h4>
+          <p>Automatic timestamped backups of your changes</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

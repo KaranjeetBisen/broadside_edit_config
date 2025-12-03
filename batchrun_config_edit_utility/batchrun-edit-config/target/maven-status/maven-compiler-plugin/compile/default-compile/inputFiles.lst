@@ -1,0 +1,13 @@
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/BatchrunEditConfigApplication.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/controller/ConfigController.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/controller/TemplateController.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/dao/JobQDao.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/model/ConfigUpdateRequest.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/model/ConfigView.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/model/TemplateUpdateRequest.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/model/TemplateView.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/service/ConfigService.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/service/JobQService.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/service/TemplateService.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/utils/ConfigParser.java
+/home/faizanraza/Desktop/broadside_edit_config/batchrun_config_edit_utility/batchrun-edit-config/src/main/java/com/broadside/email/batchrun_edit_config/utils/ConfigWriter.java
