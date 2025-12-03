@@ -264,6 +264,11 @@
 .upload-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.upload-icon svg {
+  stroke: currentColor;
 }
 
 .upload-box h2 {
@@ -323,6 +328,11 @@
 .empty-icon {
   font-size: 5rem;
   margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.empty-icon svg {
+  stroke: currentColor;
 }
 
 .empty-state h2 {
